@@ -40,10 +40,16 @@ else()
 endif()
 
 # Добавляем исполняемый файл
-add_executable(openCVTest test_yolo.cpp)
+add_executable(openCVTest 
+    main.cpp 
+    detection/detection.cpp
+    )
 
 # Подключаем заголовочные файлы OpenCV
-target_include_directories(openCVTest PRIVATE ${OpenCV_INCLUDE_DIRS})
+target_include_directories(openCVTest PRIVATE 
+    ${OpenCV_INCLUDE_DIRS}
+    detection    
+)
 
 # Подключаем библиотеки OpenCV
 target_link_libraries(openCVTest ${OpenCV_LIBS})
