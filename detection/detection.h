@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace core::detection{
+namespace detection{
 
     struct DetectionResult {
         std::vector<cv::Rect> boxes;
@@ -26,12 +26,12 @@ public:
 
 private:
     const std::vector<cv::Scalar>   colors;
-    cv::Size                        model_shape;
+    cv::Size2f                      model_shape;
     float                           score_threshold;
     float                           nms_threshold;
 
-    const std::string               model_path = "./model/yolov8n.onnx";
-    const std::string               coco_classes = "./model/coco";
+    const std::string               model_path = "../model/yolov8n.onnx";
+    const std::string               coco_classes = "../model/coco";
 };
 
 }

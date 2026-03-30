@@ -1,8 +1,3 @@
-#include <boost/asio/thread_pool.hpp>
-#include <boost/asio/post.hpp>
-
-#include "opencv2/opencv.hpp"
-
 #include <mutex>
 #include <fstream>
 #include <iostream>  // ← Добавлено
@@ -10,14 +5,13 @@
 
 #include "detection.h"
 
-using namespace core::detection;
 
 int main()
 {
-    auto detection = Detection();
+    auto detection = detection::Detection();
     const auto  class_list = detection.loadClassList();
     
-    cv::VideoCapture capture(0);
+    cv::VideoCapture capture(0, cv::CAP_V4L2);
     if (!capture.isOpened()) { 
         std::cerr << "Error: Cannot open camera!" << std::endl;
         return -1;
@@ -32,6 +26,7 @@ int main()
     }
 
     cv::Mat frame;
+    cv::namedWindow("output", cv::WINDOW_NORMAL); 
     
     while (true)
     {

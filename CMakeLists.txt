@@ -13,21 +13,10 @@ endif()
 # Указываем путь к установленной OpenCV (после make install)
 # Стандартный путь при установке: /usr/local
 # Если вы устанавливали в другую директорию, укажите её здесь
-set(OpenCV_DIR "/usr/local/lib/cmake/opencv4")
+# set(OpenCV_DIR "/usr/local/lib/cmake/opencv4")
 
 # Ищем OpenCV
-find_package(OpenCV REQUIRED COMPONENTS
-    core    
-    highgui 
-    imgproc
-    dnn
-    imgproc
-    imgcodecs
-    videoio
-    video
-    calib3d
-    features2d
-)
+find_package(OpenCV REQUIRED)
 
 # Проверка, что OpenCV найден
 if(OpenCV_FOUND)
@@ -46,7 +35,7 @@ add_executable(openCVTest
     )
 
 # Подключаем заголовочные файлы OpenCV
-target_include_directories(openCVTest PRIVATE 
+target_include_directories(openCVTest PUBLIC 
     ${OpenCV_INCLUDE_DIRS}
     detection    
 )

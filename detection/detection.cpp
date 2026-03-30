@@ -2,9 +2,8 @@
 
 #include <fstream>
 #include <iostream>  // ← Добавлено
-#include <vector>
 
-namespace core::detection
+namespace detection
 {
 
 Detection::Detection()
@@ -42,7 +41,7 @@ void Detection::loadNet(
     cv::dnn::Net &net, 
     bool is_cuda) const
 {
-    auto res = cv::dnn::readNetFromONNX(model_path);
+    auto res = cv::dnn::readNetFromONNX("../yolov8n.onnx");
     if (res.empty()) {
         std::cerr << "Error: Failed to load model!" << std::endl;
         return;  // ← Добавлено
@@ -66,11 +65,20 @@ void Detection::detect(
 {
     if (image.empty()) return;
     
-    cv::Mat model_input = image.clone();  // ← Создаем копию
+    cv::Mat model_input = image;  // ← Создаем копию
 
     cv::Mat blob;
-    cv::dnn::blobFromImage(model_input, blob, 1.0/255.0, model_shape, cv::Scalar(), true, false);
+    cv::dnn::blobFromImage(
+        model_input, blob, 1.0/255.0, model_shape, cv::Scalar(), true, false);
+
+    std::cout << "Blob dims: " << blob.dims << std::endl;
+    for (int i = 0; i < blob.dims; i++) {
+        std::cout << "Dim " << i << ": " << blob.size[i] << " ";
+    }
+    std::cout << std::endl;
+    
     net.setInput(blob);
+    cv::Mat prob = net.forward();
 
     std::vector<cv::Mat> outputs{};
     net.forward(outputs, net.getUnconnectedOutLayersNames());
@@ -80,8 +88,11 @@ void Detection::detect(
         return;
     }
 
-    int dimensions = outputs[0].size[1];
+    //int rows = outputs[0].size[1];
+    //int dimensions = outputs[0].size[2];
+
     int rows = outputs[0].size[2];
+    int dimensions = outputs[0].size[1];
 
     outputs[0] = outputs[0].reshape(1, dimensions);
     cv::transpose(outputs[0], outputs[0]);
